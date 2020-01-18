@@ -6,14 +6,12 @@ except ImportError:
 import os
 import time
 import random
+import process_logger
 
-class MySubprocess2():
-    def __init__(self, process_logger=None):
-        global print
-        print = process_logger.print if process_logger != None else __builtin__.print
-
-    def run_worker(self, delay):
-        run_worker(delay)
+def initLogging(logfilename):
+    global print
+    process_logger.initSubprocess(logfilename)
+    print = process_logger.__print
 
 def run_worker(delay):
     print(os.getpid(), " - Continued...")
