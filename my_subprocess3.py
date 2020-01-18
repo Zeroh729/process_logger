@@ -1,18 +1,10 @@
-from __future__ import print_function
-try:
-    import __builtin__
-except ImportError:
-    import builtins as __builtin__
 import os
 import time
 
-class MySubprocess3():
-    def __init__(self, process_logger=None):
-        global print
-        print = process_logger.print if process_logger != None else __builtin__.print
+import process_logger as pl
 
-    def run_worker(self):
-        run_worker()
+def initLogging(logfilename):
+    pl.init(logfilename)
 
 def run_worker():
     print(os.getpid(), " - Beep boob.")

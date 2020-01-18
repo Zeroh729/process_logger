@@ -1,36 +1,38 @@
 from __future__ import print_function
 import logging
-from common import createDir
+import os
+from common import createDir, listFilePaths
 
-class ProcessLogger:
-    def __init__(self, filename, isMainProcess=False):
-        self.log = ""
-        self.isMainProcess = isMainProcess
-        if(self.isMainProcess):
-            createDir(filename)
-            self.__configLogging("main", filename, printToConsole=True)
-        else:
-            self.__configLogging("process", filename)
+logfilename = None
 
-    def print(self, *args, **kwargs):
-        newlog = ' '.join(str(a) for a in args)
-        self.log += newlog +"\n"
-        if(self.isMainProcess):
-            logging.getLogger("main").info(newlog)
-        else:
-            logging.getLogger("process").info(newlog)
+def init(filename):
+    global logfilename
+    logfilename = filename
+    createDir(logfilename + ".log")
 
-    def printToMain(self):
-        logging.getLogger("main").info(self.log)
+    logging.basicConfig(filename=logfilename + ".log",
+                        level=logging.INFO,
+                        format='%(asctime)s - %(message)s', datefmt='%m/%d/%Y %I:%M:%S%p')
 
-    def getLog(self):
-        return self.log
+def log(*args):
+    if(logfilename != None):
+        logging.info(getMsg(args))
 
-    def __configLogging(self, loggername, logfilename, printToConsole = False):
-        logging.basicConfig(filename=logfilename,
-                            level=logging.INFO,
-                            format='%(asctime)s - %(message)s', datefmt='%m/%d/%Y %I:%M:%S%p')
-        if printToConsole:
-            import sys
-            log = logging.getLogger(loggername)
-            log.addHandler(logging.StreamHandler(sys.stdout))
+def writeOutput(*args):
+    if(logfilename != None):
+        outputFilename = logfilename + "_pid" +  str(os.getpid()) + ".log"
+        with open(outputFilename, "a+") as f:
+            f.write(getMsg(args) + "\r\n")
+
+def mergeOutputs():
+    global logfilename
+    filepaths = listFilePaths(filterName=logfilename)
+    mainOut = next((x for x in filepaths if str(os.getpid()) in x), None)
+    
+    with open(logfilename + "_output.txt", "w+") as outF:
+        for filepath in filepaths:
+            with open(filepath) as f:
+                outF.write(f.read() + "\r\n")
+
+def getMsg(args):
+    return ' '.join(str(a) for a in args)
