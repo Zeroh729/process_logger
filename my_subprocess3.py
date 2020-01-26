@@ -7,6 +7,7 @@ def initLogging(logfilename):
     pl.init(logfilename)
 
 def run_worker():
+    pl.log("my_subprocess3 started by", os.getpid())
     print(os.getpid(), " - Beep boob.")
     subfunc()
 

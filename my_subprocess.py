@@ -7,7 +7,7 @@ def initLogging(logfilename):
     pl.init(logfilename)
 
 def run_worker(delay):
-    pl.log("Starting my_subprocess 1")
+    pl.log("Starting my_subprocess 1 by", os.getpid())
     print("--------------------------------------------------------")
     pl.writeOutput("--------------------------------------------------------")
 

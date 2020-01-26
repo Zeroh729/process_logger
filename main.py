@@ -6,23 +6,25 @@ import datetime as dt
 
 import my_subprocess
 import my_subprocess2
+import my_subprocess3
 import logging
 from common import *
 import process_logger as pl
 
-loggerfilename = ""
 
 def call_subprocess(params):
+    pl.initProcess()
     print("Params are ", params)
-    my_subprocess.initLogging(loggerfilename)
-    my_subprocess2.initLogging(loggerfilename)
     my_subprocess.run_worker(params)
     my_subprocess2.run_worker(params)
 
 def initLogging():
-    global loggerfilename
     loggerfilename = "log/jsa_run_" + dt.datetime.now().strftime("%y%m%d_%H%M%S")
     pl.init(loggerfilename)
+    pl.initProcess()
+    my_subprocess.initLogging(loggerfilename)
+    my_subprocess2.initLogging(loggerfilename)
+    my_subprocess3.initLogging(loggerfilename)
 
 def main():
     initLogging()
