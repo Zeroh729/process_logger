@@ -11,11 +11,14 @@ _DATEFMT = '%m/%d/%Y %I:%M:%S%p'
 def init(filename):
     global logfilename
     logfilename = filename
-    createDir(logfilename + ".log")
 
+def initMain(filename):
+    init(filename)
+    createDir(logfilename + "_log_all.log")
     logging.basicConfig(filename=logfilename + "_log_all.log",
                         level=logging.INFO,
                         format=_FORMAT, datefmt=_DATEFMT)
+    initProcess()
 
 def initProcess():
     if(os.getpid() not in process_ids):
@@ -43,7 +46,7 @@ def writeOutput(*args):
 
 def mergeOutputs():
     global logfilename
-    filepaths = listFilePaths(filterName=logfilename + "_pid")
+    filepaths = listFilePaths(filterName=logfilename + "_out_")
     mainIndex = next((i for i,x in enumerate(filepaths) if str(os.getpid()) in x), None)
     if(mainIndex != None):
         filepaths.insert(0, filepaths.pop(mainIndex))

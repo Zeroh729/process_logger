@@ -20,8 +20,7 @@ def call_subprocess(params):
 
 def initLogging():
     loggerfilename = "log/jsa_run_" + dt.datetime.now().strftime("%y%m%d_%H%M%S")
-    pl.init(loggerfilename)
-    pl.initProcess()
+    pl.initMain(loggerfilename)
     my_subprocess.initLogging(loggerfilename)
     my_subprocess2.initLogging(loggerfilename)
     my_subprocess3.initLogging(loggerfilename)
